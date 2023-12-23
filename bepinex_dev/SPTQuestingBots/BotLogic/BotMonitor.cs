@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DrakiaXYZ.BigBrain.Brains;
+using StayInTarkov;
 using EFT;
 using EFT.HealthSystem;
 using SPTQuestingBots.Controllers;
@@ -201,10 +201,11 @@ namespace SPTQuestingBots.BotLogic
 
         public bool IsLooting()
         {
-            string activeLogicName = BrainManager.GetActiveLogic(botOwner)?.GetType()?.Name ?? "null";
+            string activeLogicName = DrakiaXYZ.BigBrain.Brains.BrainManager.GetActiveLogic(botOwner)?.GetType()?.Name ?? "null";
             return activeLogicName.Contains("Looting");
         }
 
+        // TODO: something broken in here
         public bool ShouldCheckForLoot(float minTimeBetweenLooting)
         {
             if (!ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.Enabled)

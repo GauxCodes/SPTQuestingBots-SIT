@@ -87,12 +87,12 @@ namespace SPTQuestingBots.BotLogic.Objective
             }
 
             // Check if the bot wants to loot
-            if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.ShouldCheckForLoot(objectiveManager.BotMonitor.NextLootCheckDelay))
-            {
-                BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, true);
-                return updatePreviousState(pauseLayer(ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.MaxTimeToStartLooting));
-            }
-            BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, false);
+            // if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.ShouldCheckForLoot(objectiveManager.BotMonitor.NextLootCheckDelay))
+            // {
+            //     BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, true);
+            //     return updatePreviousState(pauseLayer(ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.MaxTimeToStartLooting));
+            // }
+            // BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, false);
 
             // Check if the bot is currently extracting or wants to extract via SAIN
             if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.WantsToExtract())
@@ -109,23 +109,25 @@ namespace SPTQuestingBots.BotLogic.Objective
                 return updatePreviousState(false);
             }
 
-            if (IsInCombat())
-            {
-                return updatePreviousState(pauseLayer());
-            }
+            // if (IsInCombat())
+            // {
+            //     return updatePreviousState(pauseLayer());
+            // }
+            // LoggingController.LogInfo("1");
 
             // Check if any of the bot's group members are in combat
             // NOTE: This check MUST be performed after updating this bot's combate state!
-            if (objectiveManager.IsAllowedToTakeABreak() && BotHiveMindMonitor.GetValueForGroup(BotHiveMindSensorType.InCombat, BotOwner))
-            {
-                // WIP. Hopefully not needed with SAIN.
-                //BotHiveMindMonitor.AssignTargetEnemyFromGroup(BotOwner);
+            // if (objectiveManager.IsAllowedToTakeABreak() && BotHiveMindMonitor.GetValueForGroup(BotHiveMindSensorType.InCombat, BotOwner))
+            // {
+            //     // WIP. Hopefully not needed with SAIN.
+            //     //BotHiveMindMonitor.AssignTargetEnemyFromGroup(BotOwner);
 
-                //IReadOnlyCollection<BotOwner> groupMembers = BotHiveMindMonitor.GetAllGroupMembers(BotOwner);
-                //LoggingController.LogInfo("One of the following group members is in combat: " + string.Join(", ", groupMembers.Select(g => g.GetText())));
+            //     //IReadOnlyCollection<BotOwner> groupMembers = BotHiveMindMonitor.GetAllGroupMembers(BotOwner);
+            //     //LoggingController.LogInfo("One of the following group members is in combat: " + string.Join(", ", groupMembers.Select(g => g.GetText())));
 
-                return updatePreviousState(false);
-            }
+            //     return updatePreviousState(false);
+            // }
+            // LoggingController.LogInfo("2");
 
             // Check if the bot has wandered too far from its followers.
             if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.ShouldWaitForFollowers())
