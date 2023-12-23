@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx;
-using DrakiaXYZ.BigBrain.Brains;
+using StayInTarkov;
 using SPTQuestingBots.Controllers;
 using SPTQuestingBots.Controllers.Bots;
 using SPTQuestingBots.Models;
@@ -13,9 +13,8 @@ namespace SPTQuestingBots
 {
     [BepInIncompatibility("com.pandahhcorp.aidisabler")]
     [BepInIncompatibility("com.dvize.AILimit")]
-    [BepInDependency("xyz.drakia.waypoints", "1.3.3")]
-    [BepInDependency("xyz.drakia.bigbrain", "0.3.1")]
-    [BepInPlugin("com.DanW.QuestingBots", "DanW-QuestingBots", "0.3.4")]
+    //TODO: add requirement for SIT
+    [BepInPlugin("com.DanW.QuestingBots", "DanW-QuestingBots", "0.3.5")]
     public class QuestingBotsPlugin : BaseUnityPlugin
     {
         private void Awake()
@@ -35,6 +34,7 @@ namespace SPTQuestingBots
                 new Patches.BotOwnerBrainActivatePatch().Enable();
                 new Patches.IsFollowerSuitableForBossPatch().Enable();
                 new Patches.OnBeenKilledByAggressorPatch().Enable();
+                // new Patches.AirdropLandPatch().Enable();
 
                 if (ConfigController.Config.InitialPMCSpawns.Enabled)
                 {
@@ -78,7 +78,7 @@ namespace SPTQuestingBots
             IEnumerable<BotBrainType> allBrains = allNonSniperBrains.AddAllSniperBrains();
 
             LoggingController.LogInfo("Loading QuestingBots...changing bot brains for sleeping: " + string.Join(", ", allBrains));
-            BrainManager.AddCustomLayer(typeof(BotLogic.Sleep.SleepingLayer), allBrains.ToStringList(), 99);
+            DrakiaXYZ.BigBrain.Brains.BrainManager.AddCustomLayer(typeof(BotLogic.Sleep.SleepingLayer), allBrains.ToStringList(), 99);
 
             if (!ConfigController.Config.Questing.Enabled)
             {
@@ -86,10 +86,10 @@ namespace SPTQuestingBots
             }
 
             LoggingController.LogInfo("Loading QuestingBots...changing bot brains for questing: " + string.Join(", ", allNonSniperBrains));
-            BrainManager.AddCustomLayer(typeof(BotLogic.Objective.BotObjectiveLayer), allNonSniperBrains.ToStringList(), ConfigController.Config.Questing.BrainLayerPriority);
+            DrakiaXYZ.BigBrain.Brains.BrainManager.AddCustomLayer(typeof(BotLogic.Objective.BotObjectiveLayer), allNonSniperBrains.ToStringList(), ConfigController.Config.Questing.BrainLayerPriority);
 
             LoggingController.LogInfo("Loading QuestingBots...changing bot brains for following: " + string.Join(", ", allBrains));
-            BrainManager.AddCustomLayer(typeof(BotLogic.Follow.BotFollowerLayer), allBrains.ToStringList(), ConfigController.Config.Questing.BrainLayerPriority + 1);
+            DrakiaXYZ.BigBrain.Brains.BrainManager.AddCustomLayer(typeof(BotLogic.Follow.BotFollowerLayer), allBrains.ToStringList(), ConfigController.Config.Questing.BrainLayerPriority + 1);
         }
     }
 }

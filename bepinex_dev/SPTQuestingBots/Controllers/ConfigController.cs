@@ -59,7 +59,7 @@ namespace SPTQuestingBots.Controllers
             return LoggingPath;
         }
 
-        public static RawQuestClass[] GetAllQuestTemplates()
+        public static Template2[] GetAllQuestTemplates()
         {
             string errorMessage = "Cannot read quest templates.";
             string json = RequestHandler.GetJson("/QuestingBots/GetAllQuestTemplates");
@@ -68,9 +68,9 @@ namespace SPTQuestingBots.Controllers
             return _templates.Templates;
         }
 
-        public static IEnumerable<Quest> GetCustomQuests(string locationID)
+        public static IEnumerable<QuestQB> GetCustomQuests(string locationID)
         {
-            Quest[] standardQuests = new Quest[0];
+            QuestQB[] standardQuests = new QuestQB[0];
             string filename = GetLoggingPath() + "..\\quests\\standard\\" + locationID + ".json";
             if (File.Exists(filename))
             {
@@ -88,7 +88,7 @@ namespace SPTQuestingBots.Controllers
                 }
             }
 
-            Quest[] customQuests = new Quest[0];
+            QuestQB[] customQuests = new QuestQB[0];
             filename = GetLoggingPath() + "..\\quests\\custom\\" + locationID + ".json";
             if (File.Exists(filename))
             {
@@ -118,7 +118,7 @@ namespace SPTQuestingBots.Controllers
                     throw new InvalidCastException("Could deserialize an empty string to an object of type " + typeof(T).FullName);
                 }
 
-                obj = JsonConvert.DeserializeObject<T>(json, GClass1340.SerializerSettings);
+                obj = JsonConvert.DeserializeObject<T>(json, GClass1388.SerializerSettings);
 
                 return true;
             }

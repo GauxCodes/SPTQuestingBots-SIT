@@ -4,24 +4,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DrakiaXYZ.BigBrain.Brains;
+using StayInTarkov;
 using EFT;
 using SPTQuestingBots.Controllers;
 using UnityEngine;
 
 namespace SPTQuestingBots.BehaviorExtensions
 {
-    public abstract class CustomLogicDelayedUpdate : CustomLogic
+    public abstract class CustomLogicDelayedUpdate : DrakiaXYZ.BigBrain.Brains.CustomLogic
     {
         protected BotLogic.Objective.BotObjectiveManager ObjectiveManager { get; private set; }
-        protected GClass114 baseAction { get; private set; } = null;
+        protected GClass120 baseAction { get; private set; } = null;
         protected static int updateInterval { get; private set; } = 100;
 
         private Stopwatch updateTimer = Stopwatch.StartNew();
         private Stopwatch actionElapsedTime = new Stopwatch();
 
         // Find by CreateNode(BotLogicDecision type, BotOwner bot) -> case BotLogicDecision.simplePatrol -> private gclass object
-        private GClass288 baseSteeringLogic = new GClass288();
+        private GClass310 baseSteeringLogic = new GClass310();
 
         protected double ActionElpasedTime => actionElapsedTime.ElapsedMilliseconds / 1000.0;
 
@@ -50,7 +50,7 @@ namespace SPTQuestingBots.BehaviorExtensions
             actionElapsedTime.Restart();
         }
 
-        public void SetBaseAction(GClass114 _baseAction)
+        public void SetBaseAction(GClass120 _baseAction)
         {
             baseAction = _baseAction;
             baseAction.Awake();

@@ -126,15 +126,20 @@ namespace SPTQuestingBots.Controllers.Bots
                 return;
             }
 
-            float raidTimeRemainingFraction;
-            if (Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.HasRaidStarted())
-            {
-                raidTimeRemainingFraction = Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.GetRaidTimeRemainingFraction();
-            }
-            else
-            {
-                raidTimeRemainingFraction = (float)Aki.SinglePlayer.Utils.InRaid.RaidChangesUtil.NewEscapeTimeMinutes / Aki.SinglePlayer.Utils.InRaid.RaidChangesUtil.OriginalEscapeTimeMinutes;
-            }
+            // float raidTimeRemainingFraction;
+            // if (Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.HasRaidStarted())
+            // {
+            //     raidTimeRemainingFraction = Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.GetRaidTimeRemainingFraction();
+            // }
+            // else
+            // {
+            //     raidTimeRemainingFraction = (float)Aki.SinglePlayer.Utils.InRaid.RaidChangesUtil.NewEscapeTimeMinutes / Aki.SinglePlayer.Utils.InRaid.RaidChangesUtil.OriginalEscapeTimeMinutes;
+            // }
+
+            // float raidTimeRemainingFraction = Math.Min(GClass1416.EscapeTimeSeconds(Singleton<AbstractGame>.Instance.GameTimer), 
+            //                                     (float)Singleton<RaidSettings>.Instance.SelectedLocation.EscapeTimeLimit * 60 / (float)Singleton<RaidSettings>.Instance.SelectedLocation.EscapeTimeLimit);
+            
+            float raidTimeRemainingFraction = 0.95f; // TODO: Fix me
 
             // Determine how much to reduce the initial PMC's based on raid ET (used for Scav runs in Late to the Party)
             double playerCountFactor = ConfigController.InterpolateForFirstCol(ConfigController.Config.InitialPMCSpawns.InitialPMCsVsRaidET, raidTimeRemainingFraction);
@@ -194,7 +199,8 @@ namespace SPTQuestingBots.Controllers.Bots
             }
 
             // Ensure the raid is progressing before running anything
-            float timeSinceSpawning = Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.GetSecondsSinceSpawning();
+            // float timeSinceSpawning = Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.GetSecondsSinceSpawning();
+            float timeSinceSpawning = GClass1416.PastTimeSeconds(Singleton<AbstractGame>.Instance.GameTimer);
             if (timeSinceSpawning < 1)
             {
                 return;
@@ -340,8 +346,8 @@ namespace SPTQuestingBots.Controllers.Bots
                     LoggingController.LogInfo("Generating PMC group spawn #" + botGroup + " (Number of bots: " + botsInGroup + ")...");
                     try
                     {
-                        GClass514 botProfileData = new GClass514(spawnSide, spawnType, botdifficulty, 0f, null);
-                        GClass513 botSpawnData = await GClass513.Create(botProfileData, ibotCreator, botsInGroup, botSpawnerClass);
+                        GetProfileData botProfileData = new GetProfileData(spawnSide, spawnType, botdifficulty, 0f, null);
+                        CreationData botSpawnData = await CreationData.Create(botProfileData, ibotCreator, botsInGroup, botSpawnerClass);
 
                         Models.BotSpawnInfo botSpawnInfo = new Models.BotSpawnInfo(botGroup, botSpawnData);
 
@@ -534,7 +540,7 @@ namespace SPTQuestingBots.Controllers.Bots
             foreach (Vector3 position in positions)
             {
                 //LoggingController.LogInfo("Adding spawn position " + position.ToString() + " for PMC group...");
-                initialPMCGroup.Data.AddPosition(position);
+                initialPMCGroup.Data.AddPosition(position, 1);
             }
 
             // In SPT-AKI 3.7.1, this is GClass732

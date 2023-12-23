@@ -21,7 +21,7 @@ namespace SPTQuestingBots.Controllers
     {
         public static bool IsScavRun { get; set; } = false;
         public static bool HasRaidStarted { get; set; } = false;
-        public static LocationSettingsClass.Location CurrentLocation { get; private set; } = null;
+        public static LocationSettings.Location CurrentLocation { get; private set; } = null;
         public static RaidSettings CurrentRaidSettings { get; private set; } = null;
         
         private static TarkovApplication tarkovApplication = null;
@@ -477,7 +477,7 @@ namespace SPTQuestingBots.Controllers
             return null;
         }
 
-        private static LocationSettingsClass getLocationSettings(TarkovApplication app)
+        private static LocationSettings getLocationSettings(TarkovApplication app)
         {
             if (app == null)
             {

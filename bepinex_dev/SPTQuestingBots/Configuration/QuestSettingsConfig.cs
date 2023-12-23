@@ -28,8 +28,14 @@ namespace SPTQuestingBots.Configuration
         [JsonProperty("max_raid_ET")]
         public float MaxRaidET { get; set; } = 999;
 
-        [JsonProperty("chanceOfHavingKeys")]
+        [JsonProperty("chance_of_having_keys")]
         public float ChanceOfHavingKeys { get; set; } = 25;
+
+        [JsonProperty("min_level")]
+        public int MinLevel { get; set; } = 0;
+
+        [JsonProperty("max_level")]
+        public int MaxLevel { get; set; } = 99;
 
         [JsonProperty("level_range")]
         public double[][] LevelRange { get; set; } = new double[0][];
@@ -37,6 +43,21 @@ namespace SPTQuestingBots.Configuration
         public QuestSettingsConfig()
         {
 
+        }
+
+        public static void ApplyQuestSettingsFromConfig(Models.QuestQB quest, QuestSettingsConfig settings)
+        {
+            quest.ChanceForSelecting = settings.Chance;
+            quest.MaxBots = settings.MaxBotsPerQuest;
+            quest.MaxRaidET = settings.MaxRaidET;
+            quest.MinLevel = settings.MinLevel;
+            quest.MaxLevel = settings.MaxLevel;
+        }
+
+        public static void ApplyQuestSettingsFromConfig(Models.QuestObjective objective, QuestSettingsConfig settings)
+        {
+            objective.MinDistanceFromBot = settings.MinDistance;
+            objective.MaxDistanceFromBot = settings.MaxDistance;
         }
     }
 }

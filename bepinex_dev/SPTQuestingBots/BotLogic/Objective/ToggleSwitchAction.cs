@@ -109,7 +109,7 @@ namespace SPTQuestingBots.BotLogic.Objective
 
                     if (ConfigController.Config.Debug.ShowFailedPaths)
                     {
-                        drawBotPath(Color.yellow);
+                        //drawBotPath(Color.yellow);
                     }
                 }
 

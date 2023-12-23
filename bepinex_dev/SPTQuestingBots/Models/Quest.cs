@@ -9,12 +9,13 @@ using EFT;
 using EFT.Game.Spawning;
 using EFT.Interactive;
 using Newtonsoft.Json;
+using Comfort.Common;
 using SPTQuestingBots.Controllers;
 using SPTQuestingBots.Controllers.Bots;
 
 namespace SPTQuestingBots.Models
 {
-    public class Quest
+    public class QuestQB
     {
         [JsonProperty("repeatable")]
         public bool IsRepeatable { get; set; } = false;
@@ -53,7 +54,7 @@ namespace SPTQuestingBots.Models
         public Dictionary<string, bool> RequiredSwitches = new Dictionary<string, bool>();
 
         [JsonIgnore]
-        public RawQuestClass Template { get; private set; } = null;
+        public Template2 Template { get; private set; } = null;
 
         [JsonProperty("name")]
         private string name = "Unnamed Quest";
@@ -72,22 +73,22 @@ namespace SPTQuestingBots.Models
         public IEnumerable<QuestObjective> ValidObjectives => AllObjectives.Where(o => o.GetFirstStepPosition() != null);
         public int NumberOfValidObjectives => ValidObjectives.Count();
 
-        public Quest()
+        public QuestQB()
         {
 
         }
 
-        public Quest(int priority) : this()
+        public QuestQB(int priority) : this()
         {
             Priority = priority;
         }
 
-        public Quest(int priority, string _name): this(priority)
+        public QuestQB(int priority, string _name): this(priority)
         {
             name = _name;
         }
 
-        public Quest(int priority, RawQuestClass template) : this(priority)
+        public QuestQB(int priority, Template2 template) : this(priority)
         {
             Template = template;
         }
@@ -104,12 +105,14 @@ namespace SPTQuestingBots.Models
 
         public bool CanAssignBot(BotOwner bot)
         {
-            if (!Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.HasRaidStarted())
+            // if (!Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.HasRaidStarted())
+             if (!GClass1416.Started(Singleton<AbstractGame>.Instance.GameTimer))
             {
                 return false;
             }
 
-            float raidTime = Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.GetElapsedRaidSeconds();
+            // float raidTime = Aki.SinglePlayer.Utils.InRaid.RaidTimeUtil.GetElapsedRaidSeconds();
+            float raidTime = GClass1416.PastTimeSeconds(Singleton<AbstractGame>.Instance.GameTimer);
 
             if (RequiredSwitches.Any(s => !isSwitchInCorrectPosition(s.Key, s.Value)))
             {

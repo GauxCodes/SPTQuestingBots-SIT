@@ -118,7 +118,7 @@ namespace SPTQuestingBots.Controllers.Bots
                 new BotBrainType("BossSanitar"),
                 new BotBrainType("BossGluhar"),
                 new BotBrainType("BossKojaniy"),
-                new BotBrainType("BossBoar") 
+                new BotBrainType("BossBoar")
             });
         }
 
@@ -213,8 +213,8 @@ namespace SPTQuestingBots.Controllers.Bots
 
         public static readonly WildSpawnType[] pmcSpawnTypes = new WildSpawnType[2]
         {
-            (WildSpawnType)Aki.PrePatch.AkiBotsPrePatcher.sptUsecValue,
-            (WildSpawnType)Aki.PrePatch.AkiBotsPrePatcher.sptBearValue
+            (WildSpawnType)41,
+            (WildSpawnType)42
         };
 
         public static bool WillBotBeAPMC(BotOwner botOwner)
@@ -233,8 +233,8 @@ namespace SPTQuestingBots.Controllers.Bots
 
         public static EPlayerSide GetSideForWildSpawnType(WildSpawnType spawnType)
         {
-            WildSpawnType sptUsec = (WildSpawnType)Aki.PrePatch.AkiBotsPrePatcher.sptUsecValue;
-            WildSpawnType sptBear = (WildSpawnType)Aki.PrePatch.AkiBotsPrePatcher.sptBearValue;
+            WildSpawnType sptUsec = (WildSpawnType)41;
+            WildSpawnType sptBear = (WildSpawnType)42;
 
             //if (spawnType == WildSpawnType.pmcBot || spawnType == sptUsec)
             if (spawnType == sptUsec)

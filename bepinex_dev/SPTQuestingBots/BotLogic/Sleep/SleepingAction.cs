@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DrakiaXYZ.BigBrain.Brains;
+using StayInTarkov;
 using EFT;
 
 namespace SPTQuestingBots.BotLogic.Sleep
 {
-    internal class SleepingAction : CustomLogic
+    internal class SleepingAction : DrakiaXYZ.BigBrain.Brains.CustomLogic
     {
         public SleepingAction(BotOwner _BotOwner) : base(_BotOwner)
         {

@@ -17,7 +17,7 @@ namespace SPTQuestingBots.Models
         public bool HasSpawned { get; set; } = false;
 
         public int GroupNumber { get; private set; }
-        public GClass513 Data { get; private set; }
+        public CreationData Data { get; private set; }
         public List<BotOwner> Owners { get; set; } = new List<BotOwner>();
         public SpawnPointParams? SpawnPoint { get; set; }
         public Vector3[] SpawnPositions { get; set; } = new Vector3[0];
@@ -27,7 +27,7 @@ namespace SPTQuestingBots.Models
 
         public int Count => Data?.Profiles?.Count ?? 0;
 
-        public BotSpawnInfo(int groupNum, GClass513 data)
+        public BotSpawnInfo(int groupNum, CreationData data)
         {
             GroupNumber = groupNum;
             Data = data;

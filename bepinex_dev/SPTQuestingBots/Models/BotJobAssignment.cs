@@ -27,7 +27,7 @@ namespace SPTQuestingBots.Models
         public string BotName { get; private set; } = "???";
         public string BotNickname { get; private set; } = "???";
         public int BotLevel { get; private set; } = -1;
-        public Quest QuestAssignment { get; private set; } = null;
+        public QuestQB QuestAssignment { get; private set; } = null;
         public QuestObjective QuestObjectiveAssignment { get; private set; } = null;
         public QuestObjectiveStep QuestObjectiveStepAssignment { get; private set; } = null;
         public Door DoorToUnlock { get; private set; } = null;
@@ -44,7 +44,7 @@ namespace SPTQuestingBots.Models
             updateBotInfo();
         }
 
-        public BotJobAssignment(BotOwner bot, Quest quest, QuestObjective objective) : this(bot)
+        public BotJobAssignment(BotOwner bot, QuestQB quest, QuestObjective objective) : this(bot)
         {
             QuestAssignment = quest;
             QuestObjectiveAssignment = objective;

@@ -46,7 +46,7 @@ namespace SPTQuestingBots.Helpers
                     throw new ArgumentNullException(nameof(key));
                 }
 
-                GClass2761 unlockDoorInteractionResult = new GClass2761(key, null, true);
+                KeyInteractionResult unlockDoorInteractionResult = new KeyInteractionResult(key, null, true);
                 if (unlockDoorInteractionResult == null)
                 {
                     throw new InvalidOperationException(botOwner.GetText() + " cannot use key " + key.Item.LocalizedName() + " to unlock door " + door.Id);

@@ -22,7 +22,7 @@ namespace SPTQuestingBots.BotLogic.Objective
         private Vector3? interactionPosition = null;
         private IResult keyGenerationResult = null;
         private KeyComponent keyComponent = null;
-        private DependencyGraph<IEasyBundle>.GClass3114 bundleLoader = null;
+        private DependencyGraph<IEasyBundle>.Bundles bundleLoader = null;
 
         public UnlockDoorAction(BotOwner _BotOwner) : base(_BotOwner, 100)
         {
@@ -174,7 +174,7 @@ namespace SPTQuestingBots.BotLogic.Objective
 
                     if (ConfigController.Config.Debug.ShowFailedPaths)
                     {
-                        drawBotPath(Color.yellow);
+                        //drawBotPath(Color.yellow);
                     }
                 }
 
@@ -233,6 +233,9 @@ namespace SPTQuestingBots.BotLogic.Objective
             ObjectiveManager.PauseRequest = ConfigController.Config.Questing.UnlockingDoors.PauseTimeAfterUnlocking;
             
             LoggingController.LogInfo("Bot " + BotOwner.GetText() + " unlocked door " + door.Id);
+
+            // Assume the door has been unlocked because bots will constantly try breaching some doors otherwise
+            // LocationController.ReportUnlockedDoor(door);
         }
     }
 }

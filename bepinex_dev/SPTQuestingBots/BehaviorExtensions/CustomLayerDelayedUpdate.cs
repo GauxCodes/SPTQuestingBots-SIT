@@ -23,7 +23,7 @@ namespace SPTQuestingBots.BehaviorExtensions
         UnlockDoor
     }
 
-    internal abstract class CustomLayerDelayedUpdate : CustomLayer
+    internal abstract class CustomLayerDelayedUpdate : DrakiaXYZ.BigBrain.Brains.CustomLayer
     {
         protected static int updateInterval { get; private set; } = 100;
         protected bool previousState { get; private set; } = false;
@@ -52,7 +52,7 @@ namespace SPTQuestingBots.BehaviorExtensions
 
         public override Action GetNextAction()
         {
-            //LoggingController.LogInfo(BotOwner.GetText() + " is swtiching from " + previousAction.ToString() + " to " + nextAction.ToString());
+            LoggingController.LogInfo(BotOwner.GetText() + " is swtiching from " + previousAction.ToString() + " to " + nextAction.ToString());
 
             previousAction = nextAction;
 

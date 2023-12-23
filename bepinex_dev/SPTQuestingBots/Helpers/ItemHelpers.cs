@@ -14,19 +14,19 @@ namespace SPTQuestingBots.Helpers
 {
     public static class ItemHelpers
     {
-        public static InventoryControllerClass GetInventoryController(this BotOwner bot)
+        public static InventoryController GetInventoryController(this BotOwner bot)
         {
             Type playerType = typeof(Player);
 
             FieldInfo inventoryControllerField = playerType.GetField("_inventoryController", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (InventoryControllerClass)inventoryControllerField.GetValue(bot.GetPlayer);
+            return (InventoryController)inventoryControllerField.GetValue(bot.GetPlayer);
         }
 
         public static bool TryTransferItem(this BotOwner botOwner, Item item)
         {
             try
             {
-                InventoryControllerClass inventoryControllerClass = GetInventoryController(botOwner);
+                InventoryController inventoryController = GetInventoryController(botOwner);
 
                 // Enumerate all possible equipment slots into which the key can be transferred
                 List<EquipmentSlot> possibleSlots = new List<EquipmentSlot>();
@@ -37,7 +37,7 @@ namespace SPTQuestingBots.Helpers
                 possibleSlots.AddRange(new EquipmentSlot[] { EquipmentSlot.Backpack, EquipmentSlot.TacticalVest, EquipmentSlot.ArmorVest, EquipmentSlot.Pockets });
 
                 // Try to find an available grid in the equipment slots to which the key can be transferred
-                ItemAddress locationForItem = botOwner.FindLocationForItem(item, possibleSlots, inventoryControllerClass);
+                ItemAddress locationForItem = botOwner.FindLocationForItem(item, possibleSlots, inventoryController);
                 if (locationForItem == null)
                 {
                     LoggingController.LogError("Cannot find any location to put key " + item.LocalizedName() + " for " + botOwner.GetText());
@@ -45,7 +45,7 @@ namespace SPTQuestingBots.Helpers
                 }
 
                 // Initialize the transation to transfer the key to the bot
-                GStruct375<GClass2593> moveResult = GClass2585.Add(item, locationForItem, inventoryControllerClass, true);
+                SOperationResult1<AddResult> moveResult = ItemMovementHandler.Add(item, locationForItem, inventoryController, true);
                 if (!moveResult.Succeeded)
                 {
                     LoggingController.LogError("Cannot move key " + item.LocalizedName() + " to inventory of " + botOwner.GetText());
@@ -67,7 +67,7 @@ namespace SPTQuestingBots.Helpers
 
                 // Execute the transation to transfer the key to the bot
                 Callback callback = new Callback(callbackAction);
-                inventoryControllerClass.TryRunNetworkTransaction(moveResult, callback);
+                inventoryController.TryRunNetworkTransaction(moveResult, callback);
 
                 return true;
             }
@@ -80,15 +80,15 @@ namespace SPTQuestingBots.Helpers
             }
         }
 
-        public static ItemAddress FindLocationForItem(this BotOwner botOwner, Item item, IEnumerable<EquipmentSlot> possibleSlots, InventoryControllerClass botInventoryController)
+        public static ItemAddress FindLocationForItem(this BotOwner botOwner, Item item, IEnumerable<EquipmentSlot> possibleSlots, InventoryController botInventoryController)
         {
             foreach (EquipmentSlot slot in possibleSlots)
             {
                 //LoggingController.LogInfo("Checking " + slot.ToString() + " for " + BotOwner.GetText() + "...");
 
                 // Search through all grids in the equipment slot
-                SearchableItemClass equipmentSlot = botInventoryController.Inventory.Equipment.GetSlot(slot).ContainedItem as SearchableItemClass;
-                foreach (GClass2318 grid in (equipmentSlot?.Grids ?? (new GClass2318[0])))
+                GItem2 equipmentSlot = botInventoryController.Inventory.Equipment.GetSlot(slot).ContainedItem as GItem2;
+                foreach (StashGrid grid in (equipmentSlot?.Grids ?? (new StashGrid[0])))
                 {
                     //LoggingController.LogInfo("Checking grid " + grid.ID + " (" + grid.GridWidth.Value + "x" + grid.GridHeight.Value + ") in " + slot.ToString() + " for " + BotOwner.GetText() + "...");
 
@@ -98,7 +98,7 @@ namespace SPTQuestingBots.Helpers
                     {
                         LoggingController.LogInfo(botOwner.GetText() + " will receive " + item.LocalizedName() + " in its " + slot.ToString() + "...");
 
-                        return new GClass2580(grid, locationInGrid);
+                        return new GridItemAddress(grid, locationInGrid);
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace SPTQuestingBots.Helpers
             return false;
         }
 
-        public static DependencyGraph<IEasyBundle>.GClass3114 LoadBundle(this Item item)
+        public static DependencyGraph<IEasyBundle>.Bundles LoadBundle(this Item item)
         {
             try
             {
@@ -157,9 +157,9 @@ namespace SPTQuestingBots.Helpers
         {
             try
             {
-                InventoryControllerClass inventoryControllerClass = GetInventoryController(botOwner);
+                InventoryController inventoryController = GetInventoryController(botOwner);
 
-                IEnumerable<KeyComponent> matchingKeys = inventoryControllerClass.Inventory.Equipment
+                IEnumerable<KeyComponent> matchingKeys = inventoryController.Inventory.Equipment
                     .GetItemComponentsInChildren<KeyComponent>(false)
                     .Where(k => k.Template.KeyId == door.KeyId);
 

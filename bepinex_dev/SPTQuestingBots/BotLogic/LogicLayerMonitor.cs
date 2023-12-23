@@ -6,7 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using StayInTarkov;
 using EFT;
+using HarmonyLib;
 using SPTQuestingBots.Controllers;
 using UnityEngine;
 
@@ -183,11 +185,49 @@ namespace SPTQuestingBots.BotLogic
             AICoreLayerClass<BotLogicDecision> brainLayer = GetBrainLayerForBot(botOwner, layerName);
             if (brainLayer == null)
             {
-                //LoggingController.LogWarning("Could not find brain layer with the name \"" + layerName + "\".");
+                LoggingController.LogWarning("Could not find brain layer with the name \"" + layerName + "\".");
                 return false;
             }
 
             return brainLayer.IsActive;
+        }
+
+        public static DrakiaXYZ.BigBrain.Brains.CustomLayer GetExternalCustomLayer(AICoreLayerClass<BotLogicDecision> layer)
+        {
+            if (layer == null)
+            {
+                return null;
+            }
+
+            Assembly bigBrainAssembly = Assembly.GetAssembly(typeof(DrakiaXYZ.BigBrain.Brains.BrainManager));
+            if (bigBrainAssembly == null)
+            {
+                LoggingController.LogError("Could get the BigBrain assembly");
+                return null;
+            }
+
+            Type customLayerWrapperType = bigBrainAssembly.GetType("DrakiaXYZ.BigBrain.Internal.CustomLayerWrapper", false);
+            if (customLayerWrapperType == null)
+            {
+                LoggingController.LogError("Could not find CustomLayerWrapper type");
+                return null;
+            }
+
+            FieldInfo customLayerField = AccessTools.Field(customLayerWrapperType, "customLayer");
+            if (customLayerField == null)
+            {
+                LoggingController.LogError("Could not find customLayer field");
+                return null;
+            }
+
+            DrakiaXYZ.BigBrain.Brains.CustomLayer customLayer = (DrakiaXYZ.BigBrain.Brains.CustomLayer)customLayerField.GetValue(layer);
+            if (layer == null)
+            {
+                LoggingController.LogError("Could not get CustomLayer");
+                return null;
+            }
+
+            return customLayer;
         }
     }
 }

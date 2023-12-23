@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Aki.Reflection.Patching;
+using StayInTarkov;
 using SPTQuestingBots.Controllers;
 using SPTQuestingBots.Controllers.Bots;
 
@@ -15,8 +15,7 @@ namespace SPTQuestingBots.Patches
         protected override MethodBase GetTargetMethod()
         {
             Type localGameType = Aki.Reflection.Utils.PatchConstants.LocalGameType;
-            Type targetType = localGameType.GetNestedType("Class1290", BindingFlags.NonPublic | BindingFlags.Instance);
-
+            Type targetType = localGameType.GetNestedType("Class1320", BindingFlags.Public | BindingFlags.Instance);
             return targetType.GetMethod("method_1", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 

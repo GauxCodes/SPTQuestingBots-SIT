@@ -86,11 +86,11 @@ namespace SPTQuestingBots.Controllers.Bots
                 if (BotJobAssignmentFactory.QuestCount == 0)
                 {
                     // Create quests based on the EFT quest templates loaded from the server. This may include custom quests added by mods. 
-                    RawQuestClass[] allQuestTemplates = ConfigController.GetAllQuestTemplates();
+                    Template2[] allQuestTemplates = ConfigController.GetAllQuestTemplates();
 
-                    foreach (RawQuestClass questTemplate in allQuestTemplates)
+                    foreach (Template2 questTemplate in allQuestTemplates)
                     {
-                        Quest quest = new Quest(ConfigController.Config.Questing.BotQuests.EFTQuests.Priority, questTemplate);
+                        QuestQB quest = new QuestQB(ConfigController.Config.Questing.BotQuests.EFTQuests.Priority, questTemplate);
                         quest.ChanceForSelecting = ConfigController.Config.Questing.BotQuests.EFTQuests.Chance;
                         quest.PMCsOnly = true;
                         BotJobAssignmentFactory.AddQuest(quest);
@@ -121,7 +121,7 @@ namespace SPTQuestingBots.Controllers.Bots
                 yield return BotJobAssignmentFactory.ProcessAllQuests(updateChancesOfBotsHavingKeys, ConfigController.Config.Questing.BotQuests.EFTQuests.ChanceOfHavingKeys);
 
                 // Create a quest where the bots wanders to various spawn points around the map. This was implemented as a stop-gap for maps with few other quests.
-                Quest spawnPointQuest = createSpawnPointQuest();
+                QuestQB spawnPointQuest = createSpawnPointQuest();
                 if (spawnPointQuest != null)
                 {
                     BotJobAssignmentFactory.AddQuest(spawnPointQuest);
@@ -132,7 +132,7 @@ namespace SPTQuestingBots.Controllers.Bots
                 }
 
                 // Create a quest where initial PMC's can run to your spawn point (not directly to you). 
-                Quest spawnRushQuest = createSpawnRushQuest();
+                QuestQB spawnRushQuest = createSpawnRushQuest();
                 if (spawnRushQuest != null)
                 {
                     BotJobAssignmentFactory.AddQuest(spawnRushQuest);
@@ -158,14 +158,14 @@ namespace SPTQuestingBots.Controllers.Bots
         private void LoadCustomQuests()
         {
             // Load all JSON files for custom quests
-            IEnumerable<Quest> customQuests = ConfigController.GetCustomQuests(LocationController.CurrentLocation.Id);
+            IEnumerable<QuestQB> customQuests = ConfigController.GetCustomQuests(LocationController.CurrentLocation.Id);
             if (!customQuests.Any())
             {
                 return;
             }
 
             LoggingController.LogInfo("Loading custom quests...");
-            foreach (Quest quest in customQuests)
+            foreach (QuestQB quest in customQuests)
             {
                 int objectiveNum = 0;
                 foreach (QuestObjective objective in quest.ValidObjectives.ToArray())
@@ -205,7 +205,7 @@ namespace SPTQuestingBots.Controllers.Bots
             LoggingController.LogInfo("Loading custom quests...found " + customQuests.Count() + " custom quests.");
         }
 
-        private void LocateQuestItems(Quest quest, IEnumerable<LootItem> allLoot)
+        private void LocateQuestItems(QuestQB quest, IEnumerable<LootItem> allLoot)
         {
             EQuestStatus eQuestStatus = EQuestStatus.AvailableForFinish;
             if (quest.Template.Conditions.ContainsKey(eQuestStatus))
@@ -277,7 +277,7 @@ namespace SPTQuestingBots.Controllers.Bots
             }
         }
 
-        private void LoadQuest(Quest quest)
+        private void LoadQuest(QuestQB quest)
         {
             quest.MaxBots = ConfigController.Config.Questing.BotQuests.EFTQuests.MaxBotsPerQuest;
 
@@ -307,8 +307,11 @@ namespace SPTQuestingBots.Controllers.Bots
             //LoggingController.LogInfo("Level range for quest \"" + quest.Name + "\": " + quest.MinLevel + "-" + quest.MaxLevel);
         }
 
-        private int getMinLevelForQuest(Quest quest)
+        private int getMinLevelForQuest(QuestQB quest)
         {
+            if(quest == null){
+                return 0;
+            }
             // Be default, use the minimum level set for the quest template
             int minLevel = quest.Template?.Level ?? 0;
 
@@ -341,7 +344,7 @@ namespace SPTQuestingBots.Controllers.Bots
                     {
                         // Find the required quest
                         string preReqQuestID = conditionQuest.target;
-                        Quest preReqQuest = BotJobAssignmentFactory.FindQuest(preReqQuestID);
+                        QuestQB preReqQuest = BotJobAssignmentFactory.FindQuest(preReqQuestID);
 
                         // Get the minimum player level to start that quest
                         int minLevelForPreReqQuest = getMinLevelForQuest(preReqQuest);
@@ -358,7 +361,7 @@ namespace SPTQuestingBots.Controllers.Bots
             return minLevel;
         }
 
-        private IEnumerable<string> getAllZoneIDsForQuest(Quest quest)
+        private IEnumerable<string> getAllZoneIDsForQuest(QuestQB quest)
         {
             List<string> zoneIDs = new List<string>();
             EQuestStatus eQuestStatus = EQuestStatus.AvailableForFinish;
@@ -430,7 +433,7 @@ namespace SPTQuestingBots.Controllers.Bots
             return zoneIDs.Distinct();
         }
 
-        private float? findPlantTimeForQuest(Quest quest, string zoneID)
+        private float? findPlantTimeForQuest(QuestQB quest, string zoneID)
         {
             EQuestStatus eQuestStatus = EQuestStatus.AvailableForFinish;
             if (quest.Template?.Conditions?.ContainsKey(eQuestStatus) == true)
@@ -493,7 +496,7 @@ namespace SPTQuestingBots.Controllers.Bots
             }
 
             // Find all quests that have objectives using this trigger
-            Quest[] matchingQuests = BotJobAssignmentFactory.FindQuestsWithZone(trigger.Id);
+            QuestQB[] matchingQuests = BotJobAssignmentFactory.FindQuestsWithZone(trigger.Id);
             if (matchingQuests.Length == 0)
             {
                 //LoggingController.LogInfo("No matching quests for trigger " + trigger.Id);
@@ -529,7 +532,7 @@ namespace SPTQuestingBots.Controllers.Bots
             }
 
             // Add a step with the NavMesh position to corresponding objectives in every quest using this zone
-            foreach (Quest quest in matchingQuests)
+            foreach (QuestQB quest in matchingQuests)
             {
                 LoggingController.LogInfo("Found trigger " + trigger.Id + " for quest: " + quest.Name);
 
@@ -564,7 +567,7 @@ namespace SPTQuestingBots.Controllers.Bots
             }
         }
 
-        private static void updateChancesOfBotsHavingKeys(Models.Quest quest, float chance)
+        private static void updateChancesOfBotsHavingKeys(Models.QuestQB quest, float chance)
         {
             foreach (QuestObjective objective in quest.AllObjectives)
             {
@@ -575,7 +578,7 @@ namespace SPTQuestingBots.Controllers.Bots
             }
         }
 
-        private static Models.Quest createSpawnPointQuest(ESpawnCategoryMask spawnTypes = ESpawnCategoryMask.All)
+        private static Models.QuestQB createSpawnPointQuest(ESpawnCategoryMask spawnTypes = ESpawnCategoryMask.All)
         {
             // Ensure the map has spawn points
             IEnumerable<SpawnPointParams> eligibleSpawnPoints = LocationController.CurrentLocation.SpawnPointParams.Where(s => s.Categories.Any(spawnTypes));
@@ -584,7 +587,7 @@ namespace SPTQuestingBots.Controllers.Bots
                 return null;
             }
 
-            Models.Quest quest = new Models.Quest(ConfigController.Config.Questing.BotQuests.SpawnPointWander.Priority, "Spawn Points");
+            Models.QuestQB quest = new Models.QuestQB(ConfigController.Config.Questing.BotQuests.SpawnPointWander.Priority, "Spawn Points");
             quest.ChanceForSelecting = ConfigController.Config.Questing.BotQuests.SpawnPointWander.Chance;
             quest.MaxBots = ConfigController.Config.Questing.BotQuests.SpawnPointWander.MaxBotsPerQuest;
 
@@ -606,7 +609,7 @@ namespace SPTQuestingBots.Controllers.Bots
             return quest;
         }
 
-        private static Models.Quest createSpawnRushQuest()
+        private static Models.QuestQB createSpawnRushQuest()
         {
             SpawnPointParams? playerSpawnPoint = LocationController.GetPlayerSpawnPoint();
             if (!playerSpawnPoint.HasValue)
@@ -626,7 +629,7 @@ namespace SPTQuestingBots.Controllers.Bots
             //Vector3? playerPosition = LocationController.GetPlayerPosition();
             //LoggingController.LogInfo("Creating spawn rush quest for " + playerSpawnPoint.Value.Id + " via " + navMeshPosition.Value.ToString() + " for player at " + playerPosition.Value.ToString() + "...");
 
-            Models.Quest quest = new Models.Quest(ConfigController.Config.Questing.BotQuests.SpawnRush.Priority, "Spawn Rush");
+            Models.QuestQB quest = new Models.QuestQB(ConfigController.Config.Questing.BotQuests.SpawnRush.Priority, "Spawn Rush");
             quest.ChanceForSelecting = ConfigController.Config.Questing.BotQuests.SpawnRush.Chance;
             quest.MaxRaidET = ConfigController.Config.Questing.BotQuests.SpawnRush.MaxRaidET;
             quest.MaxBots = ConfigController.Config.Questing.BotQuests.SpawnRush.MaxBotsPerQuest;

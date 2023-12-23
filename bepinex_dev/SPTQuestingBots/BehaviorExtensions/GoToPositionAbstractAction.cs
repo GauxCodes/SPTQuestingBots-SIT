@@ -98,7 +98,7 @@ namespace SPTQuestingBots.BehaviorExtensions
             {
                 if (drawPath && ConfigController.Config.Debug.ShowFailedPaths)
                 {
-                    drawBotPath(Color.red);
+                    //drawBotPath(Color.red);
                 }
 
                 return true;
@@ -109,22 +109,22 @@ namespace SPTQuestingBots.BehaviorExtensions
 
         protected void drawBotPath(Color color)
         {
-            Vector3[] botPath = BotOwner.Mover?.CurPath;
-            if (botPath == null)
-            {
-                return;
-            }
+            // Vector3[] botPath = BotOwner.Mover?._pathController.CurPath;
+            // if (botPath == null)
+            // {
+            //     return;
+            // }
 
-            List<Vector3> adjustedPathCorners = new List<Vector3>();
-            foreach (Vector3 corner in botPath)
-            {
-                adjustedPathCorners.Add(new Vector3(corner.x, corner.y + 0.75f, corner.z));
-            }
+            // List<Vector3> adjustedPathCorners = new List<Vector3>();
+            // foreach (Vector3 corner in botPath)
+            // {
+            //     adjustedPathCorners.Add(new Vector3(corner.x, corner.y + 0.75f, corner.z));
+            // }
 
-            string pathName = "BotPath_" + BotOwner.Id + "_" + DateTime.Now.ToFileTime();
+            // string pathName = "BotPath_" + BotOwner.Id + "_" + DateTime.Now.ToFileTime();
 
-            Models.PathVisualizationData botPathRendering = new Models.PathVisualizationData(pathName, adjustedPathCorners.ToArray(), color);
-            PathRender.AddOrUpdatePath(botPathRendering);
+            // Models.PathVisualizationData botPathRendering = new Models.PathVisualizationData(pathName, adjustedPathCorners.ToArray(), color);
+            // PathRender.AddOrUpdatePath(botPathRendering);
         }
 
         protected void outlineTargetPosition(Color color)
