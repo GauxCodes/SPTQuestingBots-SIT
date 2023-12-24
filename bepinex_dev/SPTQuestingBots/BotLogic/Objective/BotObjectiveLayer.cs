@@ -85,15 +85,15 @@ namespace SPTQuestingBots.BotLogic.Objective
             {
                 return updatePreviousState(false);
             }
-
+            
             // Check if the bot wants to loot
-            // if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.ShouldCheckForLoot(objectiveManager.BotMonitor.NextLootCheckDelay))
-            // {
-            //     BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, true);
-            //     return updatePreviousState(pauseLayer(ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.MaxTimeToStartLooting));
-            // }
+            if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.ShouldCheckForLoot(objectiveManager.BotMonitor.NextLootCheckDelay))
+            {
+                // BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, true);
+                return updatePreviousState(pauseLayer(ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.MaxTimeToStartLooting));
+            }
             // BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, false);
-
+            
             // Check if the bot is currently extracting or wants to extract via SAIN
             if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.WantsToExtract())
             {
@@ -109,14 +109,12 @@ namespace SPTQuestingBots.BotLogic.Objective
                 return updatePreviousState(false);
             }
 
-            // if (IsInCombat())
-            // {
-            //     return updatePreviousState(pauseLayer());
-            // }
-            // LoggingController.LogInfo("1");
-
-            // Check if any of the bot's group members are in combat
-            // NOTE: This check MUST be performed after updating this bot's combate state!
+            if (IsInCombat())
+            {
+                return updatePreviousState(pauseLayer());
+            }
+            // // Check if any of the bot's group members are in combat
+            // // NOTE: This check MUST be performed after updating this bot's combate state!
             // if (objectiveManager.IsAllowedToTakeABreak() && BotHiveMindMonitor.GetValueForGroup(BotHiveMindSensorType.InCombat, BotOwner))
             // {
             //     // WIP. Hopefully not needed with SAIN.
@@ -127,7 +125,6 @@ namespace SPTQuestingBots.BotLogic.Objective
 
             //     return updatePreviousState(false);
             // }
-            // LoggingController.LogInfo("2");
 
             // Check if the bot has wandered too far from its followers.
             if (objectiveManager.IsAllowedToTakeABreak() && objectiveManager.BotMonitor.ShouldWaitForFollowers())

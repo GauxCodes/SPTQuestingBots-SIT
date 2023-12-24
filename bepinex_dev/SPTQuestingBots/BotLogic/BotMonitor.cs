@@ -231,13 +231,18 @@ namespace SPTQuestingBots.BotLogic
             //      - After the minimum amount of time, the bot will only be allowed to search for a certain amount of time. If it doesn't find any loot
             //        in that time, it will be forced to continue questing
             //      - The minimum amount of time between loot checks depends on whether the bot successfully found loot during the previous check
+
+            if(lootingLayerMonitor.CanUseLayer(minTimeBetweenLooting)){
+                return false;
+            }
+
             if
             (
                 (isLooting || (lootSearchTimer.ElapsedMilliseconds < 1000 * ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.MaxLootScanTime))
                 && (isLooting || isSearchingForLoot || lootingLayerMonitor.CanUseLayer(minTimeBetweenLooting))
             )
             {
-                //LoggingController.LogInfo("Layer for bot " + BotOwner.GetText() + ": " + activeLayerName + ". Logic: " + activeLogicName);
+                // LoggingController.LogInfo("Layer for bot " + BotOwner.GetText() + ": " + activeLayerName + ". Logic: " + activeLogicName);
 
                 if (isLooting)
                 {
@@ -272,7 +277,7 @@ namespace SPTQuestingBots.BotLogic
             if (wasLooting || hasFoundLoot)
             {
                 lootingLayerMonitor.RestartCanUseTimer();
-                //LoggingController.LogInfo("Bot " + BotOwner.GetText() + " is done looting (Loot searching time: " + (lootSearchTimer.ElapsedMilliseconds / 1000.0) + ").");
+                LoggingController.LogInfo("Bot " + botOwner.GetText() + " is done looting (Loot searching time: " + (lootSearchTimer.ElapsedMilliseconds / 1000.0) + ").");
             }
 
             lootSearchTimer.Reset();

@@ -119,10 +119,10 @@ namespace SPTQuestingBots.BotLogic.Follow
                 || (!tooFarFromBossForLooting && objectiveManager.BotMonitor.IsLooting())
             )
             {
-                BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, true);
+                // BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, true);
                 return updatePreviousState(pauseLayer(ConfigController.Config.Questing.BotQuestingRequirements.BreakForLooting.MaxTimeToStartLooting));
             }
-            BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, false);
+            // BotHiveMindMonitor.UpdateValueForBot(BotHiveMindSensorType.WantsToLoot, BotOwner, false);
 
             setNextAction(BotActionType.FollowBoss, "FollowBoss");
             return updatePreviousState(true);
