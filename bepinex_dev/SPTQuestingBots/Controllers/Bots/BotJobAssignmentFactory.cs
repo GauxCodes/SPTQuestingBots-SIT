@@ -441,14 +441,16 @@ namespace SPTQuestingBots.Controllers.Bots
 
         public static BotJobAssignment GetNewBotJobAssignment(this BotOwner bot)
         {
-            float timeSinceSpawning = GClass1416.PastTimeSeconds(Singleton<AbstractGame>.Instance.GameTimer);
-            if ( timeSinceSpawning > 20)
-            {
-                BotObjectiveManager botObjectiveManager = BotObjectiveManager.GetObjectiveManagerForBot(bot);
-                botObjectiveManager?.BotMonitor?.InstructBotToExtract();
+            // TODO: SAIN interop not supported
+            
+            // float timeSinceSpawning = GClass1416.PastTimeSeconds(Singleton<AbstractGame>.Instance.GameTimer);
+            // if ( timeSinceSpawning > 20)
+            // {
+            //     BotObjectiveManager botObjectiveManager = BotObjectiveManager.GetObjectiveManagerForBot(bot);
+            //     botObjectiveManager?.BotMonitor?.InstructBotToExtract();
 
-                return null;
-            }
+            //     return null;
+            // }
 
             // Get the bot's most recent assingment if applicable
             QuestQB quest = null;
